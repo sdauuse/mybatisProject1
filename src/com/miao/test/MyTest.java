@@ -1,15 +1,11 @@
 package com.miao.test;
 
-import com.miao.dao.Customer;
+import com.miao.domain.Customer;
 import com.miao.utils.MybatisUtils;
-import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
-import org.apache.ibatis.session.SqlSessionFactory;
-import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 
 /**

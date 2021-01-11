@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.miao.mapper.CustomerMapper">
+
+    <!--如果数据库字段名字和javaBean中属性名字不同，则可以采用resultMap的方式进行重新映射-->
+    <resultMap id="customerMap" type="com.miao.domain.Customer">
+        <id column="cust_id" property="cust_id"></id>
+        <result column="cust_name" property="cust_name"></result>
+        <result column="cust_phone" property="cust_phone"></result>
+        <result column="cust_profession" property="cust_profession"></result>
+        <result column="email" property="email"></result>
+    </resultMap>
+
+    <!--根据cust_id查询客户-->
+    <!--mybatis #{cust_id} == '?' -->
+    <select id="queryCustomerById" parameterType="integer" resultType="com.miao.domain.Customer">
+	  SELECT * FROM `customer` WHERE cust_id  = #{cust_id}
+	</select>
+
+    <!--测试 查询两个参数-->
+    <select id="queryCustomerByIdAndName" resultType="com.miao.domain.Customer">
+        select * from `customer` where cust_id=#{param1} and cust_name=#{param2}
+    </select>
+
+    <select id="queryCustomerAll" resultType="com.miao.domain.Customer">
+        select * from customer
+    </select>
+
+    <!--模糊查询 SELECT * FROM customer WHERE cust_name LIKE '%李%'-->
+     <!--${}不防止sql注入         select * from customer where cust_name like '%${value}%'-->
+    <select id="queryCustomerLike" resultType="com.miao.domain.Customer" parameterType="string">
+
+        select * from customer where cust_name like #{name}
+    </select>
+
+    <select id="queryCustomerCount"  resultType="java.lang.Integer">
+        select count(*) from `customer`
+    </select>
+
+
+    <!--插入一个客户-->
+    <insert id="insertCustomer" parameterType="com.miao.domain.Customer">
+
+        /*  获取插入的最后一个id, order表示在执行insert操作之后执行selectkey里面的操作*/
+        <selectKey keyColumn="cust_id" keyProperty="cust_id" resultType="Integer" order="AFTER">
+            select last_insert_id();
+        </selectKey>
+
+        insert into `customer`(cust_name,cust_profession,cust_phone,email)
+        values (#{cust_name},#{cust_profession},#{cust_phone},#{email})
+    </insert>
+
+    <!--更新操作-->
+    <update id="updateCustomer" parameterType="com.miao.domain.Customer">
+        update `customer` set cust_name=#{cust_name} where cust_id=#{cust_id}
+    </update>
+
+    <!--删除操作-->
+    <delete id="deleteCustomer" parameterType="com.miao.domain.Customer">
+        delete from `customer` where cust_id=#{cust_id}
+    </delete>
+</mapper>

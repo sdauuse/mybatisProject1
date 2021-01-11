@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.miao.mapper.OrderMapper">
+
+    <resultMap id="orderMap" type="com.miao.domain.Order">
+        <id property="order_id" column="order_id"></id>
+        <result property="order_name" column="order_name"></result>
+        <result property="order_num" column="order_num"></result>
+
+        <!--<result property="customer.cust_id" column="cust_id"></result>
+        <result property="customer.cust_name" column="cust_name"></result>
+        <result property="customer.cust_phone" column="cust_phone"></result>
+        <result property="customer.cust_profession" column="cust_profession"></result>
+        <result property="customer.email" column="email"></result>-->
+
+        <!--跟上面注释代码效果相同，但更容易阅读,且能够实现分布查询-->
+        <association property="customer" javaType="com.miao.domain.Customer">
+            <id property="cust_id" column="cust_id"></id>
+            <result property="cust_name" column="cust_name"></result>
+            <result property="cust_profession" column="cust_profession"></result>
+            <result property="cust_phone" column="cust_phone"></result>
+            <result property="email" column="email"></result>
+        </association>
+    </resultMap>
+
+    <select id="queryAllOrder" resultMap="orderMap">
+        SELECT * FROM `order` o LEFT JOIN `customer` c ON o.`cust_id`=c.`cust_id`
+    </select>
+    
+    <resultMap id="orderMap2" type="com.miao.domain.Order">
+        <id property="order_id" column="order_id"></id>
+        <result property="order_name" column="order_name"></result>
+        <result property="order_num" column="order_num"></result>
+
+        <!--分布查询，先查询了queryOrderById 再查询下面select的内容-->
+        <association property="customer" javaType="com.miao.domain.Customer"
+                     select="com.miao.mapper.CustomerMapper.queryCustomerById" column="cust_id"
+        >
+
+        </association>
+    </resultMap>
+    <select id="queryOrderById" resultMap="orderMap2" parameterType="integer">
+        select * from `order` where order_id=#{order_id}
+    </select>
+</mapper>

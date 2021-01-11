@@ -1,6 +1,6 @@
 package com.miao.test;
 
-import com.miao.dao.Customer;
+import com.miao.domain.Customer;
 import com.miao.utils.MybatisUtils;
 import org.apache.ibatis.session.SqlSession;
 import org.junit.Test;

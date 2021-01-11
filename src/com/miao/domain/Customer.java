@@ -1,4 +1,4 @@
-package com.miao.dao;
+package com.miao.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
