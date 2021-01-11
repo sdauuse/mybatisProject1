@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.miao.mapper.TeacherMapper">
+    <resultMap id="teacherMap" type="com.miao.domain.Teacher">
+        <id property="teacher_id" column="teacher_id"/>
+        <result property="teacher_name" column="teacher_name"/>
+        <collection property="students" javaType="list" ofType="com.miao.domain.Student">
+            <id property="stu_id" column="stu_id"/>
+            <result property="stu_name" column="stu_name"/>
+        </collection>
+
+    </resultMap>
+
+    <select id="queryAllTeachers" resultMap="teacherMap">
+        SELECT * FROM teacher t LEFT JOIN stu_teacher_rel st ON t.`teacher_id`=st.`teacher_id`
+        LEFT JOIN student s ON s.`stu_id`=st.`stu_id`
+    </select>
+</mapper>

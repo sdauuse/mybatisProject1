@@ -11,6 +11,9 @@ import java.util.List;
  */
 public interface CustomerMapper {
 
+
+    public List<Customer> queryCustomerByIdAndOrder(Integer cust_id);
+
     public Customer queryCustomerById(Integer cust_id);
 
     public Customer queryCustomerByIdAndName(Integer cust_id, String cust_name);
@@ -26,4 +29,5 @@ public interface CustomerMapper {
     public void updateCustomer(Customer customer);
 
     public void deleteCustomer(Customer customer);
+
 }

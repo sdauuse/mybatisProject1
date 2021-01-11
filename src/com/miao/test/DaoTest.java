@@ -22,7 +22,7 @@ public class DaoTest {
     public void test1(){
         CustomerDao customerDao = new CustomerDaoImpl();
 
-        Customer customer = customerDao.getCustomerById(12);
+        Customer customer = customerDao.getCustomerById(3);
         System.out.println(customer);
 
     }

@@ -26,7 +26,7 @@
     <select id="queryAllOrder" resultMap="orderMap">
         SELECT * FROM `order` o LEFT JOIN `customer` c ON o.`cust_id`=c.`cust_id`
     </select>
-    
+
     <resultMap id="orderMap2" type="com.miao.domain.Order">
         <id property="order_id" column="order_id"></id>
         <result property="order_name" column="order_name"></result>
@@ -34,12 +34,20 @@
 
         <!--分布查询，先查询了queryOrderById 再查询下面select的内容-->
         <association property="customer" javaType="com.miao.domain.Customer"
-                     select="com.miao.mapper.CustomerMapper.queryCustomerById" column="cust_id"
-        >
-
+                     select="com.miao.mapper.CustomerMapper.queryCustomerById" column="cust_id">
         </association>
     </resultMap>
     <select id="queryOrderById" resultMap="orderMap2" parameterType="integer">
         select * from `order` where order_id=#{order_id}
     </select>
+
+    <insert id="insertOrder" parameterType="com.miao.domain.Order">
+        insert into `order`(order_id,order_name,order_num,cust_id)
+        values(#{order_id},#{order_name},#{order_num},#{customer.cust_id})
+    </insert>
+
+    <update id="updateRelation" parameterType="integer">
+        UPDATE `order` SET cust_id=NULL
+        WHERE cust_id=#{id}
+    </update>
 </mapper>

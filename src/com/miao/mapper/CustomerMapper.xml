@@ -13,6 +13,27 @@
         <result column="email" property="email"></result>
     </resultMap>
 
+    <resultMap id="customerMap2" type="com.miao.domain.Customer">
+        <id property="cust_id" column="cust_id"/>
+        <result property="cust_name" column="cust_name"/>
+        <result property="cust_profession" column="cust_profession"/>
+        <result property="cust_phone" column="cust_phone"/>
+        <result property="email" column="email"/>
+
+        <collection property="orders" ofType="com.miao.domain.Order">
+            <id property="order_id" column="order_id"/>
+            <result property="order_name" column="order_name"/>
+            <result property="order_num" column="order_num"/>
+        </collection>
+    </resultMap>
+
+    <select id="queryCustomerByIdAndOrder" resultMap="customerMap2" parameterType="integer">
+        SELECT * FROM customer c LEFT JOIN `order` o ON c.`cust_id`=o.`cust_id`
+        WHERE c.`cust_id`=#{cust_id}
+
+    </select>
+
+
     <!--根据cust_id查询客户-->
     <!--mybatis #{cust_id} == '?' -->
     <select id="queryCustomerById" parameterType="integer" resultType="com.miao.domain.Customer">
@@ -29,24 +50,26 @@
     </select>
 
     <!--模糊查询 SELECT * FROM customer WHERE cust_name LIKE '%李%'-->
-     <!--${}不防止sql注入         select * from customer where cust_name like '%${value}%'-->
+    <!--${}不防止sql注入         select * from customer where cust_name like '%${value}%'-->
     <select id="queryCustomerLike" resultType="com.miao.domain.Customer" parameterType="string">
 
         select * from customer where cust_name like #{name}
     </select>
 
-    <select id="queryCustomerCount"  resultType="java.lang.Integer">
+    <select id="queryCustomerCount" resultType="java.lang.Integer">
         select count(*) from `customer`
     </select>
 
 
-    <!--插入一个客户-->
-    <insert id="insertCustomer" parameterType="com.miao.domain.Customer">
+    <!--插入一个客户 useGeneratedKeys="true" keyProperty="cust_id" keyColumn="cust_id"的效果同selectkey-->
+    <!--接上，效果，即插入Customer后会把自增主键返回-->
+    <insert id="insertCustomer" parameterType="com.miao.domain.Customer"
+            useGeneratedKeys="true" keyProperty="cust_id" keyColumn="cust_id">
 
-        /*  获取插入的最后一个id, order表示在执行insert操作之后执行selectkey里面的操作*/
-        <selectKey keyColumn="cust_id" keyProperty="cust_id" resultType="Integer" order="AFTER">
-            select last_insert_id();
-        </selectKey>
+        /* 获取插入的最后一个id, order表示在执行insert操作之后执行selectkey里面的操作*/
+        <!-- <selectKey keyColumn="cust_id" keyProperty="cust_id" resultType="Integer" order="AFTER">
+             select last_insert_id();
+         </selectKey>-->
 
         insert into `customer`(cust_name,cust_profession,cust_phone,email)
         values (#{cust_name},#{cust_profession},#{cust_phone},#{email})
@@ -61,4 +84,5 @@
     <delete id="deleteCustomer" parameterType="com.miao.domain.Customer">
         delete from `customer` where cust_id=#{cust_id}
     </delete>
+
 </mapper>
