@@ -1,6 +1,7 @@
 package com.miao.mapper;
 
 import com.miao.domain.Customer;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -11,6 +12,9 @@ import java.util.List;
  */
 public interface CustomerMapper {
 
+    public List<Customer> queryCustomers(Integer[] ids);
+
+    public List<Customer> dynamicQueryCustomerByNameAndPro(@Param("name") String name, @Param("profession") String profession);
 
     public List<Customer> queryCustomerByIdAndOrder(Integer cust_id);
 

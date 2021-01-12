@@ -3,4 +3,15 @@
 <mapper namespace="com.miao.mapper.StudentMapper">
 
 
+    <select id="queryStudentByTeacher" resultType="com.miao.domain.Student" parameterType="integer">
+        SELECT *
+        FROM student s
+        WHERE s.`stu_id` IN (SELECT stu_id FROM stu_teacher_rel st WHERE teacher_id =#{teacher_id})
+    </select>
+
+    <!--插入学生-->
+    <insert id="insertStudent" parameterType="com.miao.domain.Student" useGeneratedKeys="true" keyProperty="stu_id" keyColumn="stu_id">
+
+        insert into `student`(stu_name) values(#{stu_name})
+    </insert>
 </mapper>

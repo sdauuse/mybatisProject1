@@ -60,6 +60,39 @@
         select count(*) from `customer`
     </select>
 
+    <!--<where>标签有两个作用，1.如果两个if标签里面的值都为空，则sql语句中where会被删掉，2.如果第一个if为空，第二个if有值，
+     则会帮助我们删除第一个and-->
+    <!--  <select id="dynamicQueryCustomerByNameAndPro1" resultType="com.miao.domain.Customer">
+          select * from `customer`
+          <where>
+              <if test="name!=null and name!=''">
+                  cust_name=#{name}
+              </if>
+              <if test="profession!=null and profession!=''">
+                  and cust_profession=#{profession}
+              </if>
+          </where>
+
+      </select>-->
+    <!--choose标签只需要找到第一个符合条件的进行执行，找到第一个符合条件的即可-->
+    <select id="dynamicQueryCustomerByNameAndPro" resultType="com.miao.domain.Customer">
+        select * from `customer`
+        <where>
+            <choose>
+                <when test="profession!=null and profession!=''">
+                    and cust_profession=#{profession}
+                </when>
+
+                <when test="name!=null and name!=''">
+                    cust_name=#{name}
+                </when>
+
+                <otherwise>1=1</otherwise>
+            </choose>
+        </where>
+
+    </select>
+
 
     <!--插入一个客户 useGeneratedKeys="true" keyProperty="cust_id" keyColumn="cust_id"的效果同selectkey-->
     <!--接上，效果，即插入Customer后会把自增主键返回-->
@@ -75,9 +108,18 @@
         values (#{cust_name},#{cust_profession},#{cust_phone},#{email})
     </insert>
 
-    <!--更新操作-->
+    <!--更新操作 <set>标签用户更新操作中，可以帮助我们去掉最后一个多余的，-->
     <update id="updateCustomer" parameterType="com.miao.domain.Customer">
-        update `customer` set cust_name=#{cust_name} where cust_id=#{cust_id}
+        update `customer`
+        <set>
+            <if test="cust_name!=null and cust_name!=''">
+                cust_name=#{cust_name},
+            </if>
+            <if test="cust_profession!=null and cust_profession!=''">
+                cust_profession=#{cust_profession},
+            </if>
+        </set>
+        where cust_id=#{cust_id}
     </update>
 
     <!--删除操作-->
@@ -85,4 +127,27 @@
         delete from `customer` where cust_id=#{cust_id}
     </delete>
 
+
+    <select id="queryCustomers" resultType="com.miao.domain.Customer" parameterType="Integer[]">
+
+        <include refid="selectCus">
+            <property name="lk" value="2"/>
+        </include>
+        where `cust_id` in
+        <foreach collection="array" open="(" close=")" separator="," item="ids">
+            #{ids}
+        </foreach>
+    </select>
+
+    <sql id="selectCus">
+        <choose>
+            <when test="${lk}==2">
+                select cust_name from `customer`
+            </when>
+            <otherwise>
+                select * from `customer`
+            </otherwise>
+        </choose>
+
+    </sql>
 </mapper>
