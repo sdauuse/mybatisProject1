@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -16,7 +17,8 @@ import java.util.List;
 @AllArgsConstructor
 @ToString
 @Data
-public class Customer {
+//实现序列化用于打开二级缓存
+public class Customer implements Serializable {
     private Integer cust_id;
     private String cust_name;
     private String cust_profession;

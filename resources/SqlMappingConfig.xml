@@ -13,6 +13,9 @@
         <setting name="logImpl" value="STDOUT_LOGGING"/>
         <!--设置懒加载-->
         <setting name="lazyLoadingEnabled" value="true"/>
+
+        <!--二级缓存是否开启-->
+        <setting name="cacheEnabled" value="true"/>
     </settings>
 
     <!-- spring整合后 environments配置将废除 使用spring中的连接池 -->

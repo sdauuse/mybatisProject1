@@ -4,6 +4,9 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.miao.mapper.CustomerMapper">
 
+    <!--在SqlMappingConfig.xml中开启二级缓存，在此处进行缓存配置-->
+    <cache></cache>
+
     <!--如果数据库字段名字和javaBean中属性名字不同，则可以采用resultMap的方式进行重新映射-->
     <resultMap id="customerMap" type="com.miao.domain.Customer">
         <id column="cust_id" property="cust_id"></id>
@@ -36,7 +39,7 @@
 
     <!--根据cust_id查询客户-->
     <!--mybatis #{cust_id} == '?' -->
-    <select id="queryCustomerById" parameterType="integer" resultType="com.miao.domain.Customer">
+    <select id="queryCustomerById" parameterType="integer" resultType="com.miao.domain.Customer" useCache="true">
 	  SELECT * FROM `customer` WHERE cust_id  = #{cust_id}
 	</select>
 
